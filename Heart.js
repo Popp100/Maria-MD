@@ -5,6 +5,7 @@ const fsx = require('fs-extra')
 const path = require('path')
 const util = require('util')
 const chalk = require('chalk')
+const mver = require('./package.json').version
 const moment = require('moment-timezone')
 const speed = require('performance-now')
 const ms = toMs = require('ms')
@@ -1567,12 +1568,18 @@ case 'truth':
                            
   case 'menu': case 'help': case 'h': 
   const txt = `╭─「 *Konichiwa* 」
-│⋊ 𝕌𝕤𝕖𝕣: *${pushname}* 
-│⋊ 𝕓𝕠𝕥 ℕ𝕒𝕞𝕖: 𝗠𝗮𝗿𝗶𝗮-𝗠𝗱
-│⋊ ℙ𝕣𝕖𝕗𝕚𝕩:  [ *${prefix}* ]
-│⋊ 𝕆𝕨𝕟𝕖𝕣: ${prefix}owner
+│⋊ 𝕌𝕤𝕖𝕣: ${pushname} 
+│⋊ 𝔹𝕠𝕥:  ${botname}
+│⋊ ℙ𝕣𝕖𝕗𝕚𝕩:  *${prefix}*
+│⋊ 𝔻𝕒𝕥𝕖: ${xdate}
+│⋊ 𝕋𝕚𝕞𝕖:  ${xtime}
+│⋊ 𝕆𝕨𝕟𝕖𝕣: ${ownername}
+│⋊ 𝕧𝕖𝕣𝕤𝕚𝕠𝕟: ${mver}
+│⋊ ℍ𝕠𝕤𝕥: ${os.hostname()}
+│⋊ ℙ𝕝𝕒𝕥𝕗𝕠𝕣𝕞: ${os.platform()} 
+│⋊ ℝ𝕦𝕟𝕥𝕚𝕞𝕖: ${runtime(process.uptime())}
 │⋊ 𝕋𝕠𝕥𝕒𝕝𝕔𝕞𝕕: ${mariafeature()}
-│⋊ 𝕆𝕗𝕗𝕚𝕔𝕚𝕒𝕝 𝔾𝕣𝕠𝕦𝕡: http://gg.gg/Maria-support
+│⋊ 𝕆𝕗𝕗𝕚𝕔𝕚𝕒𝕝 𝔾𝕣𝕠𝕦𝕡: https://gg.gg/Maria-support
 ╰────────────┈平和
 Here's the list of my Commands.🔖
 ${readmore}
@@ -1810,7 +1817,7 @@ var mems = []
 members.map(async adm => {
 mems.push(adm.id.replace('c.us', 's.whatsapp.net'))
 })
-Maria.sendMessage(from, {text: `\`\`\``, contextInfo: { mentionedJid : mems }}, {quoted:m})
+Maria.sendMessage(from, {text:  `\`\`\`「 ⚠️Warning⚠️ 」\`\`\`\n\nNsfw(not safe for work) feature has been enabled in this group, which means one can access sexual graphics from the bot!`, contextInfo: { mentionedJid : mems }}, {quoted:m})
 } else if (args[0] === "off") {
 if (!AntiNsfw) return reply('Already deactivated')
 let off = isnsfw.indexOf(from)
@@ -2047,24 +2054,20 @@ Maria.sendMessage(m.chat, { document : { url : baby1[0].link}, fileName : baby1[
 }
 break
 
-case 'welcome': {
-if (/on/.test(text)) {
- if (global.welcome) {
-   m.reply("Already activated");
- } else {
- global.welcome = true;
-m.reply("Activated welcome message");
-}
-} else if (/off/.test(text)) {
-if (!global.welcome) {
-   m.reply("Already deactivated");
- } else {
- global.welcome = false;
-m.reply("Deactivated welcome message");
-}
-} else m.reply(`Type ${prefix+command} on|off`);
-}
-break;
+case 'welcome':
+            case 'left': {
+              if (!m.isGroup) return reply(mess.group)
+                if (!isCreator) return reply(mess.owner)
+               if (args.length < 1) return reply('on/off?')
+               if (args[0] === 'on') {
+                  welcome = true
+                  reply(`${command} is enabled`)
+               } else if (args[0] === 'off') {
+                  welcome = false
+                  reply(`${command} is disabled`)
+               }
+            }
+            break
 
 
 case 'git': case 'gitclone':
@@ -2225,18 +2228,23 @@ https://chat.whatsapp.com/${response}
         break   
     
         
-  case 'mods': case 'developer': case 'dev': 
-        
-        const devmod = ` *━━━〈 🧧Maria Dev🧧 〉━━━*\n
-🔮 *Ayush* @919931122319
+  case 'mods':
+case 'developer':
+case 'dev':
+    const devmod = `  🍥 *Moderators* 🍥\n\n
+*🎫Ayush* @919931122319
 
-🔮 *xeon* @916909137213
+*🎫xeon* @916909137213
 
-🔮 *Pikachu* @918811074852
-\n📛*Don't Spam them to avoid Blocking !*\n\n For any help, type *${prefix}support* and ask in the group.\n\n*✨️Thanks for using Maria-Md* `
-	Maria.sendMessage(m.chat, { text: "devmod", mentions: ["919931122319@s.whatsapp.net", "918811074852@s.whatsapp.net","916909137213@s.whatsapp.net"] }, { quoted:m });		    
-		  
-        break   
+*🎫Pikachu* @918811074852
+
+*🎫OldUser* @918602239106
+ \n
+\n📛*Don't Spam them to avoid Blocking !*\n\n For any help, type *${prefix}support* and ask in the group.\n\n*✨️Thanks for using Maria-Md* `;
+
+    Maria.sendMessage(m.chat, { text: devmod, mentions: ["919931122319@s.whatsapp.net", "918811074852@s.whatsapp.net", "916909137213@s.whatsapp.net","918602239106@s.whatsapp.net"] }, { quoted: m });
+    break;
+
     case 'list': case 'listmenu': {  
     const listmenu = require("./Gallery/lib/list.js");
     Maria.sendMessage(m.chat, { video: { url: 'https://picfiles.alphacoders.com/623/623720.jpeg ' }, caption: listmenu }, { quoted: m });

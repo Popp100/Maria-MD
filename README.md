@@ -46,7 +46,7 @@
 
 
 ## ` Pair with WhatsApp`
-<h2 align="left">  <a href="https://maria-pair-code.onrender.com"><img src="https://play-lh.googleusercontent.com/901aMQFFnVoX2T-YuJmTIwpPve_SUgMv_QSyzMSPtAqt_l0CyXN1DxfD6xXU0r2f9iM=w240-h480-rw" width="90" />
+<h2 align="left">  <a href="https://maria-pair-riders004.koyeb.app/"><img src="https://play-lh.googleusercontent.com/901aMQFFnVoX2T-YuJmTIwpPve_SUgMv_QSyzMSPtAqt_l0CyXN1DxfD6xXU0r2f9iM=w240-h480-rw" width="90" />
 </a>
 </h2>
 
@@ -58,7 +58,7 @@
 
 
 
-<a href="https://heroku.com/deploy?template=https://github.com/AYUSH-PANDEY023/Maria-Md">
+<a href="https://heroku.com/deploy">
     <img src="https://www.herokucdn.com/deploy/button.png" width="160px" alt="Deploy on Heroku" >
     </a>
 
@@ -146,9 +146,16 @@ npm i -g pm2 && pm2 start  index.js && pm2 save && pm2 logs
 ```
 <br>
 <br>
-<h1 align="center">  🔮 Thanks To 🔮
-</h1>
+ <h2 align="center"> 🔖Thanks to
+</h2>
 
-* [`🧧Xeon`](https://github.com/dgxeon)
+1. **Teamolduser**
+   - GitHub: [@Teamolduser](https://github.com/Teamolduser)
 
-* [`🧧Pikachu`](https://github.com/PikaBotz)
+2. **PikaBotz**
+   - GitHub: [@PikaBotz](https://github.com/PikaBotz)
+
+3. **DGXeon**
+   - GitHub: [@DGXeon](https://github.com/DGXeon)
+
+Feel free to contribute and make this project even more awesome! 🌟

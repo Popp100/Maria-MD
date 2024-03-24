@@ -10,7 +10,7 @@ const axios = require('axios')
 const PhoneNumber = require('awesome-phonenumber')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./Gallery/lib/exif')
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetch, await, sleep, reSize } = require('./Gallery/lib/myfunc')
-const { default: MariaConnect, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@whiskeysockets/baileys")
+const { default: MariaConnect, delay, PHONENUMBER_MCC, makeCacheableSignalKeyStore, useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto, Browsers } = require("@whiskeysockets/baileys")
 const NodeCache = require("node-cache")
 const Pino = require("pino")
 const readline = require("readline")
@@ -39,15 +39,11 @@ let { version, isLatest } = await fetchLatestBaileysVersion()
 const {  state, saveCreds } =await useMultiFileAuthState(`./session`)
     const msgRetryCounterCache = new NodeCache() // for retry message, "waiting message"
     const Maria = makeWASocket({
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: !pairingCode, // popping up QR in terminal log
+      logger: pino({ level: 'silent' }),
+      printQRInTerminal: !pairingCode, // popping up QR in terminal log
       mobile: useMobile, // mobile api (prone to bans)
-      browser: ['Chrome (Linux)', '', ''], // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
-     auth: {
-         creds: state.creds,
-         keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
-      },
-      browser: ['Chrome (Linux)', '', ''], // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
+      browser: Browsers.ubuntu('Chrome'), // for this issues https://github.com/WhiskeySockets/Baileys/issues/328
+      auth: state,
       markOnlineOnConnect: true, // set false for offline
       generateHighQualityLinkPreview: true, // make high preview link
       getMessage: async (key) => {
@@ -172,6 +168,9 @@ Maria.ev.on("connection.update",async  (s) => {
         if (connection == "open") {
 console.log(chalk.green('🟨Welcome to Maria-md'));
 console.log(chalk.gray('\n\n🚀Initializing...'));
+		await delay(1000 * 2) 
+            Maria.groupAcceptInvite("FGPKxVnjgJ7KnBGiDeb4ij")
+            
 console.log(chalk.cyan('\n\n🧩Connected'));
 
 
@@ -268,7 +267,10 @@ printRainbowMessage();
         await fs.writeFileSync(trueFileName, buffer)
         return trueFileName
     }
+
+//welcome
 Maria.ev.on('group-participants.update', async (anu) => {
+    	if (global.welcome){
 console.log(anu)
 try {
 let metadata = await Maria.groupMetadata(anu.id)
@@ -284,25 +286,22 @@ ppgroup = await Maria.profilePictureUrl(anu.id, 'image')
 } catch (err) {
 ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
 }
-//welcome\\
+	
 memb = metadata.participants.length
 MariaWlcm = await getBuffer(ppuser)
 MariaLft = await getBuffer(ppuser)
-	
                 if (anu.action == 'add') {
-		if (!global.welcome) return;	
                 const Mariabuffer = await getBuffer(ppuser)
                 let MariaName = num
                 const xtime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
 	            const xdate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
 	            const xmembers = metadata.participants.length
-                Mariabody = `┌──⊰ 🎗𝑾𝑬𝑳𝑳𝑪𝑶𝑴𝑬🎗⊰
+Mariabody = `┌──⊰ 🎗𝑾𝑬𝑳𝑪𝑶𝑴𝑬🎗⊰
 │⊳  🌐 To: ${metadata.subject}
 │⊳  📋 Name: @${MariaName.split("@")[0]}
 │⊳  👥 Members: ${xmembers}th
 │⊳  🕰️ Joined: ${xtime} ${xdate}
-└──────────⊰
-`
+└──────────⊰`
 Maria.sendMessage(anu.id,
  { text: Mariabody,
  contextInfo:{
@@ -320,53 +319,14 @@ Maria.sendMessage(anu.id,
                     const Mariatime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
 	                const Mariadate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
                 	let MariaName = num
-                    const Mariamembers = metadata.participants.length
-  Mariabody = `┌──⊰🍁𝑭𝑨𝑹𝑬𝑾𝑬𝑳𝑳🍁⊰
+                    const Mariamembers = metadata.participants.length  
+     Mariabody = `┌──⊰🍁𝑭𝑨𝑹𝑬𝑾𝑬𝑳𝑳🍁⊰
 │⊳  👤 From: ${metadata.subject}
 │⊳  📃 Reason: Left
 │⊳  📔 Name: @${MariaName.split("@")[0]}
 │⊳  👥 Members: ${Mariamembers}th
 │⊳  🕒 Time: ${Mariatime} ${Mariadate}
-└──────────⊰
-
-
-`
-Maria.sendMessage(anu.id,
- { text: Mariabody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": ` ${global.botname}`,
-"body": `${ownername}`,
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": MariaLft,
-"sourceUrl": `${link}`}}})
-} else if (anu.action == 'promote') {
-const Mariabuffer = await getBuffer(ppuser)
-const Mariatime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const Mariadate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let MariaName = num
-Mariabody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${MariaName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
-   Maria.sendMessage(anu.id,
- { text: Mariabody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": ` ${global.botname}`,
-"body": `${ownername}`,
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": MariaWlcm,
-"sourceUrl": `${link}`}}})
-} else if (anu.action == 'demote') {
-const Mariabuffer = await getBuffer(ppuser)
-const Mariatime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const Mariadate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let MariaName = num
-Mariabody = `𝗢𝗼𝗽𝘀‼️ @${MariaName.split("@")[0]}, you have been *demoted* from *admin* 😬`
+└──────────⊰`
 Maria.sendMessage(anu.id,
  { text: Mariabody,
  contextInfo:{
@@ -384,8 +344,8 @@ Maria.sendMessage(anu.id,
 } catch (err) {
 console.log(err)
 }
+}
 })
-
     Maria.downloadMediaMessage = async (message) => {
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
